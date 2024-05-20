@@ -3,7 +3,7 @@ name: Package WordPress Plugin
 on:
   push:
     branches:
-      - release  # Cambia 'release' por el nombre de la rama que desees usar
+      - release
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Actualiza a v3 para Node.js 20
+        uses: actions/checkout@v3
 
       - name: Read plugin version
         id: read_version
@@ -25,8 +25,7 @@ jobs:
           zip -r dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3  # Actualiza a v3 para Node.js 20
+        uses: actions/upload-artifact@v4
         with:
           name: plugin-zip
           path: dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip
-
