@@ -13,18 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Read plugin version
-        id: read_version
-        run: |
-          PLUGIN_VERSION=$(cat version.txt)
-
       - name: Create ZIP file
         run: |
           mkdir -p dist
-          zip -r dist/my-plugin-${{ steps.read_version.outputs.PLUGIN_VERSION }}.zip .
+          zip -r dist/my-plugin-$(< version.txt).zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: plugin-zip
-          path: dist/my-plugin-${{ steps.read_version.outputs.PLUGIN_VERSION }}.zip
+          path: dist/my-plugin-$(< version.txt).zip
