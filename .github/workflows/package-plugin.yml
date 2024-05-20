@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone repository
+        run: git clone https://github.com/${{ github.repository }} .
 
       - name: Read plugin version
         id: get_version
@@ -29,7 +30,7 @@ jobs:
         run: ls -la dist
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: plugin-zip
-          path: dist/my-plugin-*.zip
+        run: |
+          PLUGIN_VERSION=$(echo "${{ steps.get_version.outputs.version }}")
+          curl -F "file=@dist/my-plugin-${PLUGIN_VERSION}.zip" https://example.com/upload
+
