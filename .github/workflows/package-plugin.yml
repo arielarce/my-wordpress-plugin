@@ -11,31 +11,24 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Asegúrate de usar v3 para Node.js 20
+        uses: actions/checkout@v3  # Actualiza a v3 para Node.js 20
 
       - name: Read plugin version
         id: read_version
         run: |
           VERSION=$(cat version.txt)
-          echo "PLUGIN_VERSION=${VERSION}"
           echo "PLUGIN_VERSION=${VERSION}" >> $GITHUB_ENV
-
-      - name: Echo plugin version
-        run: echo "Plugin version is: ${{ env.PLUGIN_VERSION }}"
 
       - name: Create ZIP file
         run: |
-          VERSION=$(cat version.txt)
           mkdir -p dist
-          zip -r dist/my-plugin-${VERSION}.zip .
-        env:
-          VERSION: ${{ env.PLUGIN_VERSION }}
+          zip -r dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip .
 
       - name: List files
         run: ls -la dist
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4  # Asegúrate de usar v4 para Node.js 20
+        uses: actions/upload-artifact@v4  # Actualiza a v4 para Node.js 20
         with:
           name: plugin-zip
-          path: dist/my-plugin-*.zip
+          path: dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip
