@@ -3,34 +3,30 @@ name: Package WordPress Plugin
 on:
   push:
     branches:
-      - release
+      - release  # Cambia 'release' por el nombre de la rama que desees usar
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repository
-        run: git clone https://github.com/${{ github.repository }} .
+      - name: Checkout code
+        uses: actions/checkout@v3  # Actualiza a v3 para Node.js 20
 
       - name: Read plugin version
-        id: get_version
+        id: read_version
         run: |
-          PLUGIN_VERSION=$(sed -n 's/^VERSION=\(.*\)/\1/p' version.txt)
-          echo "::set-output name=version::$PLUGIN_VERSION"
+          VERSION=$(cat version.txt)
+          echo "PLUGIN_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create ZIP file
         run: |
-          PLUGIN_VERSION=$(echo "${{ steps.get_version.outputs.version }}")
           mkdir -p dist
-          zip -r dist/my-plugin-${PLUGIN_VERSION}.zip .
-        shell: bash
-
-      - name: List files
-        run: ls -la dist
+          zip -r dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip .
 
       - name: Upload artifact
-        run: |
-          PLUGIN_VERSION=$(echo "${{ steps.get_version.outputs.version }}")
-          curl -F "file=@dist/my-plugin-${PLUGIN_VERSION}.zip" https://example.com/upload
+        uses: actions/upload-artifact@v3  # Actualiza a v3 para Node.js 20
+        with:
+          name: plugin-zip
+          path: dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip
 
