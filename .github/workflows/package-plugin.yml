@@ -13,9 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3  # Actualiza a v3 para Node.js 20
 
+      - name: Read plugin version
+        run: |
+          VERSION=$(grep -oP '(?<=^VERSION=).*' version.txt)
+          echo "PLUGIN_VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Create ZIP file
         run: |
-          VERSION=$(cat version.txt)
+          VERSION=$(grep -oP '(?<=^VERSION=).*' version.txt)
           mkdir -p dist
           zip -r dist/my-plugin-${VERSION}.zip .
         env:
