@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # Actualiza a v2 para Node.js 20
 
       - name: Create ZIP file
         run: |
@@ -18,9 +18,7 @@ jobs:
           zip -r dist/my-plugin.zip .
         env:
           PLUGIN_VERSION: ${{ github.run_number }}
-        runs:
-          using: 'node20'
-          main: 'main.js'
+        shell: node20
 
       - name: List files
         run: ls -la dist
