@@ -16,16 +16,16 @@ jobs:
       - name: Read plugin version
         id: read_version
         run: |
-          PLUGIN_VERSION=$(grep -o 'version: [0-9.]*' version.txt | cut -d ' ' -f 2)
-          echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> $GITHUB_ENV
+          PLUGIN_VERSION=$(cat version.txt)
+          echo "::set-output name=version::$PLUGIN_VERSION"
 
       - name: Create ZIP file
         run: |
           mkdir -p dist
-          zip -r dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip .
+          zip -r dist/my-plugin-${{ steps.read_version.outputs.version }}.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: plugin-zip
-          path: dist/my-plugin-${{ env.PLUGIN_VERSION }}.zip
+          path: dist/my-plugin-${{ steps.read_version.outputs.version }}.zip
