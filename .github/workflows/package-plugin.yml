@@ -13,19 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Read plugin version
-        run: |
-          PLUGIN_VERSION=$(grep -oP '^VERSION=\K.*' version.txt)
-          echo "Plugin version is: $PLUGIN_VERSION"
-          echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> $GITHUB_ENV
-
       - name: Create ZIP file
         run: |
-          PLUGIN_VERSION=$(grep -oP '^VERSION=\K.*' version.txt)
           mkdir -p dist
-          zip -r dist/my-plugin-$PLUGIN_VERSION.zip .
+          zip -r dist/my-plugin.zip .
         env:
-          PLUGIN_VERSION: ${{ env.PLUGIN_VERSION }}
+          PLUGIN_VERSION: ${{ github.run_number }}
 
       - name: List files
         run: ls -la dist
@@ -34,4 +27,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: plugin-zip
-          path: dist/my-plugin-*.zip
+          path: dist/my-plugin.zip
