@@ -1,0 +1,31 @@
+name: Package WordPress Plugin
+
+on:
+  push:
+    branches:
+      - release  # Cambia 'release' por el nombre de la rama que desees usar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read plugin version
+        id: read_version
+        run: |
+          VERSION=$(cat version.txt)
+          echo "PLUGIN_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create ZIP file
+        run: |
+          mkdir -p dist
+          zip -r dist/my-plugin-$PLUGIN_VERSION.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: plugin-zip
+          path: dist/my-plugin-$PLUGIN_VERSION.zip
